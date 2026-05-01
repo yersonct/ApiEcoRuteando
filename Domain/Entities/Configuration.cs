@@ -13,9 +13,8 @@ namespace Api.Domain.Entities
         public Language Language { get; set; }
         public Theme BackgroundColor { get; set; }
 
-        public bool IsVoiceActive { get; set; }
+        public bool IsVoiceActive { get; set; } = false;
 
-        public bool Active { get; set; } = true;
 
     }
 }

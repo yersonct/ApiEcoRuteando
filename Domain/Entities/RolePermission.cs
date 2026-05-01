@@ -9,7 +9,6 @@ namespace Api.Domain.Entities
         public int RoleId { get; set; }
         public int PermissionId { get; set; }
 
-        public bool Active { get; set; } = true;
 
         public  Role Role { get; set; }
 

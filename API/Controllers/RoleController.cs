@@ -1,8 +1,7 @@
-﻿using Api.Application.DTO.InputDTO;
-using Api.Application.DTO.OutputDTO;
-using Api.Application.Service;
+﻿using Api.Application.Interface; 
+using Api.Application.DTO.InputDTO;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 
 namespace Api.API.Controllers
@@ -11,22 +10,32 @@ namespace Api.API.Controllers
     [Route("api/[controller]")]
     public class RoleController : ControllerBase
     {
-        private readonly RoleService _roleService;
+        private readonly IRoleService _roleService; 
 
-        public RoleController(RoleService roleService)
+        public RoleController(IRoleService roleService) 
         {
             _roleService = roleService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<RoleResponseDto>>> Get()
-            => Ok(await _roleService.GetAll());
-
         [HttpPost]
-        public async Task<IActionResult> Post(RoleCreateDto dto)
+        public async Task<IActionResult> Create([FromBody] RoleCreateDto dto)
         {
-            await _roleService.CreateRole(dto);
-            return Ok(new { mensaje = "Role creado con éxito" });
+            try
+            {
+                await _roleService.CreateRole(dto);
+                return Ok(new { mensaje = "Rol creado con éxito" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var roles = await _roleService.GetAll();
+            return Ok(roles);
         }
     }
 }

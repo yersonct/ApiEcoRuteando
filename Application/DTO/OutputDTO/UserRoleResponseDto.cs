@@ -1,8 +1,10 @@
 ﻿namespace Api.Application.DTO.OutputDTO
 {
-    public record UserRoleResponseDto(
-        string RoleName,
-        string UserEmail,
-        bool Active = true
-    );
+    public class UserRoleResponseDto
+    {
+        public string RoleName { get; set; }
+        public string UserEmail { get; set; }
+        public bool Active { get; set; } = true;
+    }
+    
 }

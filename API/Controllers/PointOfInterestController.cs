@@ -1,6 +1,6 @@
 ﻿using Api.Application.DTO.InputDTO;
 using Api.Application.DTO.OutputDTO;
-using Api.Application.Service;
+using Api.Application.Interface; 
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,9 +11,9 @@ namespace Api.API.Controllers
     [Route("api/[controller]")]
     public class PointOfInterestController : ControllerBase
     {
-        private readonly PointOfInterestService _service;
+        private readonly IPointOfInterestService _service; 
 
-        public PointOfInterestController(PointOfInterestService service)
+        public PointOfInterestController(IPointOfInterestService service)
         {
             _service = service;
         }
@@ -25,9 +25,8 @@ namespace Api.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(PointOfInterestCreateDto dto)
         {
-            // CORRECCIÓN: El método en tu Service se llama CreatePointOfInterest
             await _service.CreatePointOfInterest(dto);
-
+            // Mantenemos el mensaje de confirmación en español
             return Ok(new { mensaje = "Punto de interés creado correctamente" });
         }
     }

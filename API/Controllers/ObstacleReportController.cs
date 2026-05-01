@@ -1,6 +1,6 @@
 ﻿using Api.Application.DTO.InputDTO;
 using Api.Application.DTO.OutputDTO;
-using Api.Application.Service;
+using Api.Application.Interface; 
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,9 +11,9 @@ namespace Api.API.Controllers
     [Route("api/[controller]")]
     public class ObstacleReportController : ControllerBase
     {
-        private readonly ObstacleReportService _service;
+        private readonly IObstacleReportService _service; 
 
-        public ObstacleReportController(ObstacleReportService service)
+        public ObstacleReportController(IObstacleReportService service)
         {
             _service = service;
         }

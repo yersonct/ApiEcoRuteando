@@ -15,6 +15,5 @@ namespace Api.Domain.Entities
         public TimeRange TimeRange { get; set; }
         public bool IsCompleted { get; set; }
 
-        public bool Active { get; set; } = true;
     }
 }

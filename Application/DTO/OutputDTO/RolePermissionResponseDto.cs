@@ -1,8 +1,10 @@
 ﻿namespace Api.Application.DTO.OutputDTO
 {
-    public record RolePermissionResponseDto(
-       string RoleName,
-       string PermissionName,
-       bool Active = true
-        );
+    public class RolePermissionResponseDto
+    {
+       public string RoleName { get; set; }
+       public string PermissionName { get; set; }
+       public bool Active { get; set; } = true;
+    }
+      
 }

@@ -2,11 +2,13 @@
 
 namespace Api.Application.DTO.OutputDTO
 {
-    public record SessionResponseDto(
-        //int UserId
-        DateTime StartDate,
-        DateTime? EndDate,
-        string IpAddress,
-        bool Active
-    );
+    public class SessionResponseDto
+    {
+        public string Email { get; set; }
+        public string TokenId { get; set; }
+        public string IpAddress { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime ExpiresAt { get; set; }
+    }
+
 }

@@ -24,7 +24,6 @@ namespace Api.Domain.Entities
         public ICollection<UserRole> UserRoles { get; set; }
 
         public ICollection<AuditLog> AuditLogs { get; set; }
-        public ICollection<PasswordRecovery> PasswordRecoveries { get; set; } 
         public ICollection<SupportTicket> SupportTickets { get; set; }
 
         public ICollection<ReportValidation> ReportValidations { get; set; }
@@ -37,6 +36,5 @@ namespace Api.Domain.Entities
 
         public ICollection<Route> Routes { get; set; }
 
-        public bool Active { get; set; } = true;
     }
 }

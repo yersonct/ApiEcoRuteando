@@ -1,14 +1,17 @@
-﻿using AutoMapper;
-using Api.Application.DTO.InputDTO;
+﻿using Api.Application.DTO.InputDTO;
 using Api.Application.DTO.OutputDTO;
 using Api.Domain.Entities;
 using Api.Domain.Interface;
+using Api.Domain.ValueObjects;
+using Api.Application.Interface; 
+using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Api.Application.Service
 {
-    public class SessionService
+    public class SessionService : ISessionService 
     {
         private readonly ISessionRepository _repository;
         private readonly IMapper _mapper;
@@ -21,8 +24,14 @@ namespace Api.Application.Service
 
         public async Task CreateSession(SessionCreateDto dto)
         {
-            var session = _mapper.Map<Session>(dto);
-            session.CreatedAt = System.DateTime.UtcNow;
+            var session = new Session
+            {
+                UserId = dto.UserId,
+                IpAddress = new IpAddress(dto.IpAddress),
+                TokenId = Guid.NewGuid().ToString(),
+                CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddHours(1)
+            };
 
             await _repository.CreateAsync(session);
         }

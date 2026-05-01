@@ -17,7 +17,6 @@ namespace Api.Domain.Entities
         public User User { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public bool Active { get; set; } = true;
         public ICollection<TravelHistory> TravelHistories { get; set; }
     }
 }

@@ -11,6 +11,5 @@ namespace Api.Domain.Entities
         public string Description { get; set; }
 
         public ICollection<RolePermission> RolePermission { get; set; } 
-        public bool Active { get; set; }
     }
 }

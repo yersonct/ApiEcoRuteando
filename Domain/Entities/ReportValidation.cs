@@ -13,7 +13,6 @@ namespace Api.Domain.Entities
             public User User { get; set; }
             public ConfirmationStatus ConfirmationStatus { get; set; }
             public DateTime VotedAt { get; set; } = DateTime.UtcNow;
-            public bool Active { get; set; } = true;
 
 
     }

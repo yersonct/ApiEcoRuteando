@@ -13,10 +13,10 @@ namespace Api.Domain.ValueObjects
         public Username(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new Exception("The name cannot be empty");
+                throw new Exception("\r\nEl nombre no puede estar vacío.");
 
             if (value.Length < 2)
-                throw new Exception("Name is too short");
+                throw new Exception("\r\nEl nombre es demasiado corto.");
 
             Value = value.Trim();
         }

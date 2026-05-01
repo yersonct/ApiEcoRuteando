@@ -16,7 +16,7 @@ namespace Api.Domain.ValueObjects
 
             value = value.Trim().ToLower();
 
-            if (!Regex.IsMatch(value, @"^[a-z]+_[a-z]+$"))
+            if (!Regex.IsMatch(value, @"^[a-z]+(_[a-z]+)+$"))
                 throw new ArgumentException("Debe tener formato tipo: accion_recurso", nameof(value));
 
             Value = value;

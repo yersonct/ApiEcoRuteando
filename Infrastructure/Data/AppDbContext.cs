@@ -17,7 +17,16 @@ namespace Api.Infrastructure.Data
         public DbSet<TravelHistory> TravelHistories { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<ObstacleReport> ObstacleReports { get; set; }
+        private void ConfigureEnums(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Configuration>()
+                .Property(e => e.Language)
+                .HasConversion<string>();
 
+            modelBuilder.Entity<Configuration>()
+                .Property(e => e.BackgroundColor)
+                .HasConversion<string>();
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -25,7 +34,7 @@ namespace Api.Infrastructure.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
             ConfigureValueObjects(modelBuilder);
-
+            ConfigureEnums(modelBuilder);
             ConfigureRelationships(modelBuilder);
         }
 
@@ -48,7 +57,10 @@ namespace Api.Infrastructure.Data
             {
                 p.Property(x => x.Value).HasColumnName("Password").IsRequired();
             });
-
+            modelBuilder.Entity<Profile>().OwnsOne(p => p.PhoneNumber, p =>
+            {
+                p.Property(x => x.Value).HasColumnName("PhoneNumber");
+            });
             modelBuilder.Entity<Route>().OwnsOne(x => x.Path);
             modelBuilder.Entity<ObstacleReport>().OwnsOne(x => x.Location);
             modelBuilder.Entity<PointOfInterest>().OwnsOne(x => x.Location);

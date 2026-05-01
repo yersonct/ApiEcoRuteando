@@ -2,11 +2,12 @@
 
 namespace Api.Application.DTO.OutputDTO
 {
-    public record PasswordRecoveryResponseDto(
-        int UserId,
-        string Code,
-        DateTime ExpirationDate,
-        bool IsUsed,
-        bool Active
-    );
+        public class PasswordRecoveryResponseDto
+        {
+            public int UserId { get; set; }
+            public string Code { get; set; }
+            public DateTime ExpirationDate { get; set; }
+            public bool IsUsed { get; set; }
+            public bool Active { get; set; }
+        }
 }

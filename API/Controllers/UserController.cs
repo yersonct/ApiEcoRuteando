@@ -1,4 +1,4 @@
-﻿using Api.Application.Service;
+﻿using Api.Application.Interface; 
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
@@ -10,9 +10,9 @@ namespace Api.API.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
 
-        public UserController(UserService userService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
@@ -23,7 +23,7 @@ namespace Api.API.Controllers
             try
             {
                 await _userService.CreateUser(dto);
-                return Ok(new { mensaje = "Usuario creado con éxito" });
+                return Ok(new { mensaje = "Usuario creado con éxito" }); 
             }
             catch (Exception ex)
             {

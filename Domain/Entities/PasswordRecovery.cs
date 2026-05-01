@@ -13,6 +13,5 @@ namespace Api.Domain.Entities
         public ExpirationDate ExpirationDate { get; set; }
         public bool IsUsed { get; set; }
 
-        public bool Active { get; set; } = true;
     }
 }

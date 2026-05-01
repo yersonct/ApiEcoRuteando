@@ -20,36 +20,33 @@ namespace Api.Application.Mappers
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName));
 
             CreateMap<User, UserResponseDto>()
-                .ConstructUsing(src => new UserResponseDto(
-                    src.Name.Value,
-                    src.LastName,
-                    src.Email.Value,
-                    src.Active
-                ));
+             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.Value))
+             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email.Value))
+             .ForMember(dest => dest.Active, opt => opt.MapFrom(src => src.Active));
 
             CreateMap<PermissionCreateDto, Permission>();
-            CreateMap<Permission, PermissionResponseDto>();
+            CreateMap<Permission, PermissionResponseDto>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.Value))
+             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+             .ForMember(dest => dest.Active, opt => opt.MapFrom(src => src.Active));
 
             CreateMap<RoleCreateDto, Role>();
             CreateMap<Role, RoleResponseDto>();
 
             CreateMap<RolePermissionCreateDto, RolePermission>();
             CreateMap<RolePermission, RolePermissionResponseDto>()
-                .ConstructUsing(src => new RolePermissionResponseDto(
-                    src.Role != null ? src.Role.Name.ToString() : "Sin Rol",
-                    src.Permission != null && src.Permission.Name != null ? src.Permission.Name.Value : "Sin Permiso",
-                    src.Active
-                ));
+              .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.Name))
+             .ForMember(dest => dest.PermissionName, opt => opt.MapFrom(src => src.Permission.Name.Value))
+             .ForMember(dest => dest.Active, opt => opt.MapFrom(src => src.Active));
 
             CreateMap<UserRoleCreateDto, UserRole>();
             CreateMap<UserRole, UserRoleResponseDto>()
-                .ConstructUsing(src => new UserRoleResponseDto(
-                    src.Role != null ? src.Role.Name.ToString() : "Sin Rol",
-                    src.User != null ? src.User.Email.Value : "Sin Email",
-                    src.Active
-                ));
+          .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.Name))
+             .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.User.Email.Value))
+             .ForMember(dest => dest.Active, opt => opt.MapFrom(src => src.Active));
 
-            CreateMap<PasswordRecoveryCreateDto, PasswordRecovery>();
+            CreateMap<RequestPasswordRecoveryDto, PasswordRecovery>();
             CreateMap<PasswordRecovery, PasswordRecoveryResponseDto>();
 
             CreateMap<SupportTicketCreateDto, SupportTicket>();
@@ -63,19 +60,21 @@ namespace Api.Application.Mappers
                ));
 
             CreateMap<SessionCreateDto, Session>();
-            CreateMap<Session, SessionResponseDto>();
+            CreateMap<Session, SessionResponseDto>()
+                 .ForMember(dest => dest.Email,
+                  opt => opt.MapFrom(src => src.User.Email.Value))
+                .ForMember(dest => dest.IpAddress,
+                  opt => opt.MapFrom(src => src.IpAddress.Value));
 
             CreateMap<ProfileCreateDto, Profile>()
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => new PhoneNumber(src.PhoneNumber)))
                 .ForMember(dest => dest.ProfilePicture, opt => opt.MapFrom(src => new UrlImagen(src.ProfilePicture)));
 
             CreateMap<Profile, ProfileResponseDto>()
-                .ConstructUsing(src => new ProfileResponseDto(
-                    //src.UserId,
-                    src.PhoneNumber.Value,
-                    src.ProfilePicture.Value,
-                    src.Active
-                ));
+            .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber.Value))
+             .ForMember(dest => dest.ProfilePicture, opt => opt.MapFrom(src => src.ProfilePicture.Value))
+             .ForMember(dest => dest.Active, opt => opt.MapFrom(src => src.Active));
+
             CreateMap<ConfigurationCreateDto, Configuration>();
             CreateMap<Configuration, ConfigurationResponseDto>()
                 .ConstructUsing(src => new ConfigurationResponseDto(
@@ -151,17 +150,15 @@ namespace Api.Application.Mappers
 
             CreateMap<AuditLogCreateDto, AuditLog>();
             CreateMap<AuditLog, AuditLogResponseDto>()
-                .ConstructUsing(src => new AuditLogResponseDto(
-                    src.UserId,
-                    src.Action != null ? src.Action.ToString() : "Acción Desconocida",
-                    src.TableName.ToString(),
-                    src.OldData,
-                    src.NewData,
-                    src.IpAddress != null ? src.IpAddress.Value : "0.0.0.0",
-                    src.CreatedAt,
-                    src.Active
-                ));
-        }
+              .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Name.Value))
+              .ForMember(dest => dest.Action, opt => opt.MapFrom(src => src.Action != null ? src.Action.ToString() : "Acción Desconocida"))
+              .ForMember(dest => dest.TableName, opt => opt.MapFrom(src => src.TableName.ToString()))
+              .ForMember(dest => dest.OldData, opt => opt.MapFrom(src => src.OldData))
+              .ForMember(dest => dest.NewData, opt => opt.MapFrom(src => src.NewData))
+              .ForMember(dest => dest.IpAddress, opt => opt.MapFrom(src => src.IpAddress != null ? src.IpAddress.Value : "0.0.0.0"))
+              .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+              .ForMember(dest => dest.Active, opt => opt.MapFrom(src => src.Active));
+                }
 
         private static string FormatTimeRange(TimeRange timeRange)
         {

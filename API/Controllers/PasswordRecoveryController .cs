@@ -1,6 +1,6 @@
 ﻿using Api.Application.DTO.InputDTO;
 using Api.Application.DTO.OutputDTO;
-using Api.Application.Service;
+using Api.Application.Interface; // Usamos la interfaz
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,9 +11,9 @@ namespace Api.API.Controllers
     [Route("api/[controller]")]
     public class PasswordRecoveryController : ControllerBase
     {
-        private readonly PasswordRecoveryService _service;
+        private readonly IPasswordRecoveryService _service; 
 
-        public PasswordRecoveryController(PasswordRecoveryService service)
+        public PasswordRecoveryController(IPasswordRecoveryService service) 
         {
             _service = service;
         }
@@ -22,11 +22,25 @@ namespace Api.API.Controllers
         public async Task<ActionResult<List<PasswordRecoveryResponseDto>>> Get()
             => Ok(await _service.GetAll());
 
-        [HttpPost]
-        public async Task<IActionResult> Post(PasswordRecoveryCreateDto dto)
+        [HttpPost("request")]
+        public async Task<IActionResult> Request(RequestPasswordRecoveryDto dto)
         {
-            await _service.CreateRequest(dto);
-            return Ok(new { mensaje = "Solicitud de recuperación generada" });
+            await _service.RequestRecovery(dto);
+            return Ok();
+        }
+
+        [HttpPost("verify")]
+        public async Task<IActionResult> Verify(VerifyRecoveryCodeDto dto)
+        {
+            var result = await _service.VerifyCode(dto);
+            return Ok(result);
+        }
+
+        [HttpPost("reset")]
+        public async Task<IActionResult> Reset(ResetPasswordDto dto)
+        {
+            await _service.ResetPassword(dto);
+            return Ok();
         }
     }
 }

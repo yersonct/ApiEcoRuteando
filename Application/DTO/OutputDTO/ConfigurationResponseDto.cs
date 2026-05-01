@@ -5,6 +5,6 @@
         string Language,
         string BackgroundColor,
         bool IsVoiceActive,
-        bool Active = true
+        bool Active = false
     );
 }

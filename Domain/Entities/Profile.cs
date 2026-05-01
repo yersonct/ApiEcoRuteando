@@ -13,7 +13,6 @@ namespace Api.Domain.Entities
         public PhoneNumber PhoneNumber { get; set; }
         public UrlImagen ProfilePicture { get; set; }
 
-        public bool Active { get; set; } = true;
 
     }
 }

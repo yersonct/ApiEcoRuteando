@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260422154641_DataBase")]
-    partial class DataBase
+    [Migration("20260429165817_AddPhoneNumberToProfile")]
+    partial class AddPhoneNumberToProfile
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Api.Domain.Entity.AuditLog", b =>
+            modelBuilder.Entity("Api.Domain.Entities.AuditLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,19 +60,14 @@ namespace Api.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("UserId");
 
-                    b.Property<int?>("UserId1")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserId1");
-
                     b.ToTable("AuditLog");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.Configuration", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Configuration", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,24 +78,32 @@ namespace Api.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("BackgroundColor")
-                        .HasColumnType("integer");
+                    b.Property<string>("BackgroundColor")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<int>("Language")
+                    b.Property<bool>("IsVoiceActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Configuration");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.ObstacleReport", b =>
+            modelBuilder.Entity("Api.Domain.Entities.ObstacleReport", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
@@ -114,26 +117,22 @@ namespace Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("Description");
 
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ProfileId1")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Type")
+                    b.Property<int>("ObstacleType")
                         .HasColumnType("integer")
-                        .HasColumnName("Type");
+                        .HasColumnName("ObstacleType");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProfileId");
-
-                    b.HasIndex("ProfileId1");
 
                     b.ToTable("ObstacleReports");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.PasswordRecovery", b =>
+            modelBuilder.Entity("Api.Domain.Entities.PasswordRecovery", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -151,47 +150,14 @@ namespace Api.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("UserId1")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserId1");
-
                     b.ToTable("PasswordRecovery");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.PointOfInterest", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Category")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ProfileId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfileId");
-
-                    b.ToTable("PointOfInterest");
-                });
-
-            modelBuilder.Entity("Api.Domain.Entity.Profile", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Permission", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -202,31 +168,73 @@ namespace Api.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("ConfigurationId")
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("Description");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permission");
+                });
+
+            modelBuilder.Entity("Api.Domain.Entities.PointOfInterest", b =>
+                {
+                    b.Property<int>("Id")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ConfigurationId1")
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Category")
                         .HasColumnType("integer");
 
-                    b.Property<int>("SessionId")
+                    b.Property<string>("GooglePlaceId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConfigurationId")
-                        .IsUnique();
+                    b.HasIndex("ProfileId");
 
-                    b.HasIndex("ConfigurationId1");
+                    b.ToTable("PointOfInterest");
+                });
 
-                    b.HasIndex("SessionId")
+            modelBuilder.Entity("Api.Domain.Entities.Profile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.ReportValidation", b =>
+            modelBuilder.Entity("Api.Domain.Entities.ReportValidation", b =>
                 {
-                    b.Property<int>("ProfileId")
+                    b.Property<int>("Id")
                         .HasColumnType("integer");
 
                     b.Property<int>("ReportId")
@@ -238,30 +246,22 @@ namespace Api.Migrations
                     b.Property<int>("ConfirmationStatus")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ObstacleReportId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ProfileId1")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("VotedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("ProfileId", "ReportId");
-
-                    b.HasIndex("ObstacleReportId");
-
-                    b.HasIndex("ProfileId1");
+                    b.HasKey("Id", "ReportId");
 
                     b.HasIndex("ReportId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ReportValidation");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.Role", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -284,7 +284,7 @@ namespace Api.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.RolePermission", b =>
+            modelBuilder.Entity("Api.Domain.Entities.RolePermission", b =>
                 {
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
@@ -305,7 +305,7 @@ namespace Api.Migrations
                     b.ToTable("RolePermission");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.Route", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Route", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("integer");
@@ -323,17 +323,12 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProfileId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ProfileId");
 
                     b.ToTable("Routes");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.RouteReview", b =>
+            modelBuilder.Entity("Api.Domain.Entities.RouteReview", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -353,10 +348,6 @@ namespace Api.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("CreatedAt");
 
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("integer")
-                        .HasColumnName("ProfileId");
-
                     b.Property<int>("Rating")
                         .HasColumnType("integer")
                         .HasColumnName("Rating");
@@ -365,16 +356,20 @@ namespace Api.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("RouteId");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("UserId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
-
                     b.HasIndex("RouteId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("RouteReview");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.Session", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Session", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -386,9 +381,17 @@ namespace Api.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("Active");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("StartDate");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("ExpiresAt");
+
+                    b.Property<string>("TokenId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer")
@@ -401,7 +404,7 @@ namespace Api.Migrations
                     b.ToTable("Sessions");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.SupportTicket", b =>
+            modelBuilder.Entity("Api.Domain.Entities.SupportTicket", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -420,23 +423,42 @@ namespace Api.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("Priority");
 
-                    b.Property<int>("ProfileId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer")
-                        .HasColumnName("ProfileId");
-
-                    b.Property<int?>("ProfileId1")
-                        .HasColumnType("integer");
+                        .HasColumnName("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
-
-                    b.HasIndex("ProfileId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("SupportTickets");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.User", b =>
+            modelBuilder.Entity("Api.Domain.Entities.TravelHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("RouteId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RouteId");
+
+                    b.ToTable("TravelHistories");
+                });
+
+            modelBuilder.Entity("Api.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -457,7 +479,7 @@ namespace Api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.UserRole", b =>
+            modelBuilder.Entity("Api.Domain.Entities.UserRole", b =>
                 {
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
@@ -478,79 +500,15 @@ namespace Api.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("Api.Domain.Permission", b =>
+            modelBuilder.Entity("Api.Domain.Entities.AuditLog", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("Description");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Permission");
-                });
-
-            modelBuilder.Entity("Api.Domain.TravelHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ProfileId1")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RouteId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("RouteId1")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfileId");
-
-                    b.HasIndex("ProfileId1");
-
-                    b.HasIndex("RouteId");
-
-                    b.HasIndex("RouteId1");
-
-                    b.ToTable("TravelHistories");
-                });
-
-            modelBuilder.Entity("Api.Domain.Entity.AuditLog", b =>
-                {
-                    b.HasOne("Api.Domain.Entity.User", "User")
-                        .WithMany()
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithMany("AuditLogs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entity.User", null)
-                        .WithMany("AuditLogs")
-                        .HasForeignKey("UserId1");
-
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.IpAddress", "IpAddress", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.IpAddress", "IpAddress", b1 =>
                         {
                             b1.Property<int>("AuditLogId")
                                 .HasColumnType("integer");
@@ -574,19 +532,43 @@ namespace Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.ObstacleReport", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Configuration", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithOne("Configuration")
+                        .HasForeignKey("Api.Domain.Entities.Configuration", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entity.Profile", null)
-                        .WithMany("ObstacleReport")
-                        .HasForeignKey("ProfileId1");
+                    b.Navigation("User");
+                });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.Coordinates", "Location", b1 =>
+            modelBuilder.Entity("Api.Domain.Entities.ObstacleReport", b =>
+                {
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithMany("ObstacleReports")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Api.Domain.ValueObjects.UrlImagen", "PhotoUrl", b1 =>
+                        {
+                            b1.Property<int>("ObstacleReportId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("ObstacleReportId");
+
+                            b1.ToTable("ObstacleReports");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ObstacleReportId");
+                        });
+
+                    b.OwnsOne("Api.Domain.ValueObjects.Coordinates", "Location", b1 =>
                         {
                             b1.Property<int>("ObstacleReportId")
                                 .HasColumnType("integer");
@@ -607,45 +589,24 @@ namespace Api.Migrations
                                 .HasForeignKey("ObstacleReportId");
                         });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.UrlImagen", "PhotoUrl", b1 =>
-                        {
-                            b1.Property<int>("ObstacleReportId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.HasKey("ObstacleReportId");
-
-                            b1.ToTable("ObstacleReports");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ObstacleReportId");
-                        });
-
                     b.Navigation("Location")
                         .IsRequired();
 
                     b.Navigation("PhotoUrl")
                         .IsRequired();
 
-                    b.Navigation("Profile");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.PasswordRecovery", b =>
+            modelBuilder.Entity("Api.Domain.Entities.PasswordRecovery", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.User", "User")
-                        .WithMany()
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithMany("PasswordRecovery")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entity.User", null)
-                        .WithMany("PasswordRecovery")
-                        .HasForeignKey("UserId1");
-
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.ExpirationDate", "ExpirationDate", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.ExpirationDate", "ExpirationDate", b1 =>
                         {
                             b1.Property<int>("PasswordRecoveryId")
                                 .HasColumnType("integer");
@@ -662,7 +623,7 @@ namespace Api.Migrations
                                 .HasForeignKey("PasswordRecoveryId");
                         });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.RecoveryCode", "TemporaryCode", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.RecoveryCode", "TemporaryCode", b1 =>
                         {
                             b1.Property<int>("PasswordRecoveryId")
                                 .HasColumnType("integer");
@@ -689,19 +650,45 @@ namespace Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.PointOfInterest", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Permission", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.Profile", "Profile")
-                        .WithMany()
+                    b.OwnsOne("Api.Domain.ValueObjects.PermissionName", "Name", b1 =>
+                        {
+                            b1.Property<int>("PermissionId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("Name");
+
+                            b1.HasKey("PermissionId");
+
+                            b1.ToTable("Permission");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PermissionId");
+                        });
+
+                    b.Navigation("Name")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Api.Domain.Entities.PointOfInterest", b =>
+                {
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithMany("PointOfInterest")
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entity.Profile", null)
-                        .WithMany("PointOfInterest")
-                        .HasForeignKey("ProfileId");
+                    b.HasOne("Api.Domain.Entities.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.Coordinates", "Location", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.GeoPoint", "Location", b1 =>
                         {
                             b1.Property<int>("PointOfInterestId")
                                 .HasColumnType("integer");
@@ -722,47 +709,23 @@ namespace Api.Migrations
                                 .HasForeignKey("PointOfInterestId");
                         });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.PlaceName", "Name", b1 =>
-                        {
-                            b1.Property<int>("PointOfInterestId")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("PointOfInterestId");
-
-                            b1.ToTable("PointOfInterest");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PointOfInterestId");
-                        });
-
                     b.Navigation("Location")
                         .IsRequired();
 
-                    b.Navigation("Name")
-                        .IsRequired();
-
                     b.Navigation("Profile");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.Profile", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Profile", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.Configuration", "Configuration")
-                        .WithOne()
-                        .HasForeignKey("Api.Domain.Entity.Profile", "ConfigurationId")
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithOne("Profile")
+                        .HasForeignKey("Api.Domain.Entities.Profile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entity.Configuration", null)
-                        .WithMany("Profile")
-                        .HasForeignKey("ConfigurationId1");
-
-                    b.HasOne("Api.Domain.Entity.Session", "Session")
-                        .WithOne()
-                        .HasForeignKey("Api.Domain.Entity.Profile", "SessionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.UrlImagen", "ProfilePicture", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.UrlImagen", "ProfilePicture", b1 =>
                         {
                             b1.Property<int>("ProfileId")
                                 .HasColumnType("integer");
@@ -779,10 +742,15 @@ namespace Api.Migrations
                                 .HasForeignKey("ProfileId");
                         });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.PhoneNumber", "PhoneNumber", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.PhoneNumber", "PhoneNumber", b1 =>
                         {
                             b1.Property<int>("ProfileId")
                                 .HasColumnType("integer");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("PhoneNumber");
 
                             b1.HasKey("ProfileId");
 
@@ -792,53 +760,43 @@ namespace Api.Migrations
                                 .HasForeignKey("ProfileId");
                         });
 
-                    b.Navigation("Configuration");
-
                     b.Navigation("PhoneNumber")
                         .IsRequired();
 
                     b.Navigation("ProfilePicture")
                         .IsRequired();
 
-                    b.Navigation("Session");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.ReportValidation", b =>
+            modelBuilder.Entity("Api.Domain.Entities.ReportValidation", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.ObstacleReport", null)
-                        .WithMany("ReportValidation")
-                        .HasForeignKey("ObstacleReportId");
-
-                    b.HasOne("Api.Domain.Entity.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
+                    b.HasOne("Api.Domain.Entities.ObstacleReport", "ObstacleReport")
+                        .WithMany("Validations")
+                        .HasForeignKey("ReportId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entity.Profile", null)
-                        .WithMany("ReportValidation")
-                        .HasForeignKey("ProfileId1");
-
-                    b.HasOne("Api.Domain.Entity.ObstacleReport", "ObstacleReport")
-                        .WithMany()
-                        .HasForeignKey("ReportId")
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithMany("ReportValidations")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ObstacleReport");
 
-                    b.Navigation("Profile");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.RolePermission", b =>
+            modelBuilder.Entity("Api.Domain.Entities.RolePermission", b =>
                 {
-                    b.HasOne("Api.Domain.Permission", "Permission")
+                    b.HasOne("Api.Domain.Entities.Permission", "Permission")
                         .WithMany("RolePermission")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entity.Role", "Role")
+                    b.HasOne("Api.Domain.Entities.Role", "Role")
                         .WithMany("RolePermission")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -849,19 +807,15 @@ namespace Api.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.Route", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Route", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.Profile", "Profile")
-                        .WithMany()
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithMany("Routes")
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entity.Profile", null)
-                        .WithMany("Routes")
-                        .HasForeignKey("ProfileId");
-
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.Distance", "DistanceKm", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.Distance", "DistanceKm", b1 =>
                         {
                             b1.Property<int>("RouteId")
                                 .HasColumnType("integer");
@@ -878,7 +832,7 @@ namespace Api.Migrations
                                 .HasForeignKey("RouteId");
                         });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.RouteName", "Name", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.RouteName", "Name", b1 =>
                         {
                             b1.Property<int>("RouteId")
                                 .HasColumnType("integer");
@@ -896,7 +850,7 @@ namespace Api.Migrations
                                 .HasForeignKey("RouteId");
                         });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.RoutePath", "Path", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.RoutePath", "Path", b1 =>
                         {
                             b1.Property<int>("RouteId")
                                 .HasColumnType("integer");
@@ -914,7 +868,7 @@ namespace Api.Migrations
                                 .HasForeignKey("RouteId");
                         });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.TimeValue", "EstimatedTime", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.TimeValue", "EstimatedTime", b1 =>
                         {
                             b1.Property<int>("RouteId")
                                 .HasColumnType("integer");
@@ -943,37 +897,37 @@ namespace Api.Migrations
                     b.Navigation("Path")
                         .IsRequired();
 
-                    b.Navigation("Profile");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.RouteReview", b =>
+            modelBuilder.Entity("Api.Domain.Entities.RouteReview", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Domain.Entity.Route", "Route")
+                    b.HasOne("Api.Domain.Entities.Route", "Route")
                         .WithMany()
                         .HasForeignKey("RouteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Profile");
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Route");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.Session", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Session", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.User", "User")
+                    b.HasOne("Api.Domain.Entities.User", "User")
                         .WithMany("Sessions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.IpAddress", "IpAddress", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.IpAddress", "IpAddress", b1 =>
                         {
                             b1.Property<int>("SessionId")
                                 .HasColumnType("integer");
@@ -991,45 +945,21 @@ namespace Api.Migrations
                                 .HasForeignKey("SessionId");
                         });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.SessionEndDate", "EndDate", b1 =>
-                        {
-                            b1.Property<int>("SessionId")
-                                .HasColumnType("integer");
-
-                            b1.Property<DateTime>("Value")
-                                .HasColumnType("timestamp with time zone")
-                                .HasColumnName("EndDate");
-
-                            b1.HasKey("SessionId");
-
-                            b1.ToTable("Sessions");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SessionId");
-                        });
-
-                    b.Navigation("EndDate")
-                        .IsRequired();
-
                     b.Navigation("IpAddress")
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.SupportTicket", b =>
+            modelBuilder.Entity("Api.Domain.Entities.SupportTicket", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithMany("SupportTickets")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entity.Profile", null)
-                        .WithMany("SupportTickets")
-                        .HasForeignKey("ProfileId1");
-
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.TicketSubject", "Subject", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.TicketSubject", "Subject", b1 =>
                         {
                             b1.Property<int>("SupportTicketId")
                                 .HasColumnType("integer");
@@ -1047,15 +977,78 @@ namespace Api.Migrations
                                 .HasForeignKey("SupportTicketId");
                         });
 
-                    b.Navigation("Profile");
-
                     b.Navigation("Subject")
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.User", b =>
+            modelBuilder.Entity("Api.Domain.Entities.TravelHistory", b =>
                 {
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.Email", "Email", b1 =>
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithMany("TravelHistories")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Api.Domain.Entities.Route", "Route")
+                        .WithMany("TravelHistories")
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Api.Domain.ValueObjects.CO2", "CO2SavedKg", b1 =>
+                        {
+                            b1.Property<int>("TravelHistoryId")
+                                .HasColumnType("integer");
+
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric")
+                                .HasColumnName("CO2SavedKg");
+
+                            b1.HasKey("TravelHistoryId");
+
+                            b1.ToTable("TravelHistories");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TravelHistoryId");
+                        });
+
+                    b.OwnsOne("Api.Domain.ValueObjects.TimeRange", "TimeRange", b1 =>
+                        {
+                            b1.Property<int>("TravelHistoryId")
+                                .HasColumnType("integer");
+
+                            b1.Property<DateTime>("End")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("EndTime");
+
+                            b1.Property<DateTime>("Start")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("StartTime");
+
+                            b1.HasKey("TravelHistoryId");
+
+                            b1.ToTable("TravelHistories");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TravelHistoryId");
+                        });
+
+                    b.Navigation("CO2SavedKg")
+                        .IsRequired();
+
+                    b.Navigation("Route");
+
+                    b.Navigation("TimeRange")
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Api.Domain.Entities.User", b =>
+                {
+                    b.OwnsOne("Api.Domain.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<int>("UserId")
                                 .HasColumnType("integer");
@@ -1073,7 +1066,7 @@ namespace Api.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.Password", "Password", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.Password", "Password", b1 =>
                         {
                             b1.Property<int>("UserId")
                                 .HasColumnType("integer");
@@ -1091,7 +1084,7 @@ namespace Api.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.Username", "Name", b1 =>
+                    b.OwnsOne("Api.Domain.ValueObjects.Username", "Name", b1 =>
                         {
                             b1.Property<int>("UserId")
                                 .HasColumnType("integer");
@@ -1119,16 +1112,16 @@ namespace Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.UserRole", b =>
+            modelBuilder.Entity("Api.Domain.Entities.UserRole", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.Role", "Role")
+                    b.HasOne("Api.Domain.Entities.Role", "Role")
                         .WithMany("UserRole")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entity.User", "User")
-                        .WithMany("UserRole")
+                    b.HasOne("Api.Domain.Entities.User", "User")
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1138,152 +1131,55 @@ namespace Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Domain.Permission", b =>
+            modelBuilder.Entity("Api.Domain.Entities.ObstacleReport", b =>
                 {
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.PermissionName", "Name", b1 =>
-                        {
-                            b1.Property<int>("PermissionId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("Name");
-
-                            b1.HasKey("PermissionId");
-
-                            b1.ToTable("Permission");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PermissionId");
-                        });
-
-                    b.Navigation("Name")
-                        .IsRequired();
+                    b.Navigation("Validations");
                 });
 
-            modelBuilder.Entity("Api.Domain.TravelHistory", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Permission", b =>
                 {
-                    b.HasOne("Api.Domain.Entity.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Domain.Entity.Profile", null)
-                        .WithMany("TravelHistory")
-                        .HasForeignKey("ProfileId1");
-
-                    b.HasOne("Api.Domain.Entity.Route", "Route")
-                        .WithMany()
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Domain.Entity.Route", null)
-                        .WithMany("TravelHistory")
-                        .HasForeignKey("RouteId1");
-
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.CO2", "CO2SavedKg", b1 =>
-                        {
-                            b1.Property<int>("TravelHistoryId")
-                                .HasColumnType("integer");
-
-                            b1.Property<decimal>("Value")
-                                .HasColumnType("numeric")
-                                .HasColumnName("CO2SavedKg");
-
-                            b1.HasKey("TravelHistoryId");
-
-                            b1.ToTable("TravelHistories");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TravelHistoryId");
-                        });
-
-                    b.OwnsOne("Api.Domain.Entity.ValueObjects.TimeRange", "TimeRange", b1 =>
-                        {
-                            b1.Property<int>("TravelHistoryId")
-                                .HasColumnType("integer");
-
-                            b1.Property<DateTime>("End")
-                                .HasColumnType("timestamp with time zone")
-                                .HasColumnName("EndTime");
-
-                            b1.Property<DateTime>("Start")
-                                .HasColumnType("timestamp with time zone")
-                                .HasColumnName("StartTime");
-
-                            b1.HasKey("TravelHistoryId");
-
-                            b1.ToTable("TravelHistories");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TravelHistoryId");
-                        });
-
-                    b.Navigation("CO2SavedKg")
-                        .IsRequired();
-
-                    b.Navigation("Profile");
-
-                    b.Navigation("Route");
-
-                    b.Navigation("TimeRange")
-                        .IsRequired();
+                    b.Navigation("RolePermission");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.Configuration", b =>
-                {
-                    b.Navigation("Profile");
-                });
-
-            modelBuilder.Entity("Api.Domain.Entity.ObstacleReport", b =>
-                {
-                    b.Navigation("ReportValidation");
-                });
-
-            modelBuilder.Entity("Api.Domain.Entity.Profile", b =>
-                {
-                    b.Navigation("ObstacleReport");
-
-                    b.Navigation("PointOfInterest");
-
-                    b.Navigation("ReportValidation");
-
-                    b.Navigation("Routes");
-
-                    b.Navigation("SupportTickets");
-
-                    b.Navigation("TravelHistory");
-                });
-
-            modelBuilder.Entity("Api.Domain.Entity.Role", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Role", b =>
                 {
                     b.Navigation("RolePermission");
 
                     b.Navigation("UserRole");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.Route", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Route", b =>
                 {
-                    b.Navigation("TravelHistory");
+                    b.Navigation("TravelHistories");
                 });
 
-            modelBuilder.Entity("Api.Domain.Entity.User", b =>
+            modelBuilder.Entity("Api.Domain.Entities.User", b =>
                 {
                     b.Navigation("AuditLogs");
 
+                    b.Navigation("Configuration")
+                        .IsRequired();
+
+                    b.Navigation("ObstacleReports");
+
                     b.Navigation("PasswordRecovery");
+
+                    b.Navigation("PointOfInterest");
+
+                    b.Navigation("Profile")
+                        .IsRequired();
+
+                    b.Navigation("ReportValidations");
+
+                    b.Navigation("Routes");
 
                     b.Navigation("Sessions");
 
-                    b.Navigation("UserRole");
-                });
+                    b.Navigation("SupportTickets");
 
-            modelBuilder.Entity("Api.Domain.Permission", b =>
-                {
-                    b.Navigation("RolePermission");
+                    b.Navigation("TravelHistories");
+
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

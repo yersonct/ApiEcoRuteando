@@ -4,10 +4,10 @@ namespace Api.Application.DTO.OutputDTO
 {
     public class DailyStatisticsResponseDto
     {
-        public DateTime ReportDate { get; set; }
-        public decimal TotalDistance { get; set; }
-        public decimal TotalCO2Saved { get; set; }
-        public int BicycleUsersCount { get; set; }
-        public int PublicTransportUsersCount { get; set; }
+        public DateTime ReportDate { get;}
+        public decimal TotalDistance { get;}
+        public decimal TotalCO2Saved { get;}
+        public int BicycleUsersCount { get;}
+        public int PublicTransportUsersCount { get;}
     }
 }

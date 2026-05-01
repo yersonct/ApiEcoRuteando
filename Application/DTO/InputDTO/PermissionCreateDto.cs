@@ -2,6 +2,7 @@
 {
     public record PermissionCreateDto(
         string Name,
-        string Description
+        string Description,
+        bool Active = true
     );
 }

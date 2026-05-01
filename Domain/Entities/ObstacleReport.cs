@@ -24,6 +24,5 @@ namespace Api.Domain.Entities
 
         public ICollection<ReportValidation> Validations { get; set; } = new List<ReportValidation>();
 
-        public bool Active { get; set; } = true;
     }
 }

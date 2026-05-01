@@ -1,6 +1,6 @@
 ﻿using Api.Application.DTO.InputDTO;
 using Api.Application.DTO.OutputDTO;
-using Api.Application.Service;
+using Api.Application.Interface; 
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,9 +11,9 @@ namespace Api.API.Controllers
     [Route("api/[controller]")]
     public class PermisoRolController : ControllerBase
     {
-        private readonly RolePermissionService _service;
+        private readonly IRolePermissionService _service; 
 
-        public PermisoRolController(RolePermissionService service)
+        public PermisoRolController(IRolePermissionService service) 
         {
             _service = service;
         }
@@ -29,6 +29,7 @@ namespace Api.API.Controllers
         public async Task<IActionResult> Post(RolePermissionCreateDto dto)
         {
             await _service.AssignPermission(dto);
+            // Mantenemos el mensaje que tenías originalmente
             return Ok(new { message = "Permission assigned to role successfully" });
         }
     }

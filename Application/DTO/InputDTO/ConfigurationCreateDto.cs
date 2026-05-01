@@ -4,6 +4,6 @@
         int UserId,
         int LanguageId,
         int BackgroundColorId,
-        bool IsVoiceActive
+        bool IsVoiceActive = false
     );
 }

@@ -20,6 +20,5 @@ namespace Api.Domain.Entities
 
         public Profile Profile { get; set; }
 
-        public bool Active { get; set; } = true;
     }
 }

@@ -11,6 +11,5 @@ namespace Api.Domain.Entities
         public TicketSubject Subject { get; set; }
         public TicketPriority Priority { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public bool Active { get; set; } = true;
     }
 }

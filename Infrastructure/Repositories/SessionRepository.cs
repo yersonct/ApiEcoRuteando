@@ -19,8 +19,16 @@ namespace Api.Infrastructure.Repositories
 
         public async Task<List<Session>> GetByUserIdAsync(int userId)
         {
-            return await _context.Set<Session>()
+            return await _context.Sessions
+                .Include(s => s.User)
                 .Where(s => s.UserId == userId)
+                .ToListAsync();
+        }
+
+        public async Task<List<Session>> GetAllAsync()
+        {
+            return await _context.Sessions
+                .Include(s => s.User)
                 .ToListAsync();
         }
     }
