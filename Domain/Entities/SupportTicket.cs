@@ -1,0 +1,15 @@
+﻿using Api.Domain.Enums.genery;
+using Api.Domain.ValueObjects;
+using System;
+
+namespace Api.Domain.Entities
+{
+    public class SupportTicket : EntityGenery
+    {
+        public int UserId { get; set; }   
+        public User User { get; set; }    
+        public TicketSubject Subject { get; set; }
+        public TicketPriority Priority { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    }
+}

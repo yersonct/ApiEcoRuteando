@@ -1,0 +1,52 @@
+﻿using Api.Application.Interface; 
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System;
+using Api.Application.DTO.InputDTO;
+
+namespace Api.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
+    {
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUser([FromBody] UserCreateDto dto)
+        {
+            try
+            {
+                await _userService.CreateUser(dto);
+                return Ok(new { mensaje = "Usuario creado con éxito" }); 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var users = await _userService.GetAll();
+            return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var user = await _userService.GetById(id);
+
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
+    }
+}
